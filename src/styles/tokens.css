@@ -1,0 +1,61 @@
+/* Merkidentiteit mooiprijsje.nl (overgenomen uit het Shopify-theme) */
+:root {
+  /* Kleuren */
+  --color-primary: #1b2a5e;
+  --color-accent: #2b7fff;
+  --color-sale: #ff6b2b;
+  --color-text: #1a1a2e;
+  --color-bg: #f5f7fa;
+  --color-white: #ffffff;
+  --color-border: #e2e8f0;
+  --color-muted: #6b7280;
+  --color-success: #22c55e;
+  --color-danger: #ef4444;
+
+  --color-primary-dark: #142050;
+  --color-accent-dark: #1a6ae8;
+  --color-accent-light: #ebf2ff;
+
+  /* Typografie */
+  --font-heading: 'Poppins', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-size-base: 16px;
+  --line-height-base: 1.6;
+
+  /* Ruimte */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+  --space-24: 96px;
+
+  /* Afronding */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;
+
+  /* Schaduwen */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1), 0 2px 6px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.12), 0 4px 10px rgba(0, 0, 0, 0.07);
+  --shadow-card: 0 2px 8px rgba(27, 42, 94, 0.08);
+
+  /* Beweging */
+  --transition-fast: 0.15s ease;
+  --transition-base: 0.25s ease;
+  --transition-slow: 0.4s ease;
+
+  /* Layout */
+  --container-max: 1280px;
+  --header-height: 72px;
+  --announcement-height: 40px;
+}

@@ -1,0 +1,178 @@
+/* Broodkruimel */
+.breadcrumb {
+  padding: var(--space-4) 0;
+}
+
+.breadcrumb__list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1);
+  list-style: none;
+  font-size: 0.8125rem;
+  color: var(--color-muted);
+}
+
+.breadcrumb__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.breadcrumb__link {
+  color: var(--color-muted);
+}
+
+.breadcrumb__link:hover {
+  color: var(--color-accent);
+}
+
+.breadcrumb__sep {
+  color: var(--color-muted);
+  opacity: 0.6;
+}
+
+.breadcrumb__current {
+  color: var(--color-text);
+  font-weight: 500;
+}
+
+/* Statusmeldingen */
+.status {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  padding: var(--space-16) var(--space-4);
+  text-align: center;
+}
+
+.status--error {
+  color: var(--color-danger);
+}
+
+.status--empty svg {
+  color: var(--color-border);
+}
+
+.status__title {
+  font-size: 1.5rem;
+}
+
+.status__message {
+  color: var(--color-text);
+  max-width: 420px;
+}
+
+/* Uitklapbare vragen */
+.faq-accordion {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.faq-item {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.faq-question {
+  padding: var(--space-4) var(--space-5);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-4);
+  background: var(--color-white);
+  transition: background var(--transition-fast);
+}
+
+.faq-question::-webkit-details-marker {
+  display: none;
+}
+
+.faq-question::after {
+  content: '+';
+  font-size: 1.25rem;
+  color: var(--color-accent);
+}
+
+details[open] > .faq-question::after {
+  content: '−';
+}
+
+.faq-question:hover {
+  background: var(--color-bg);
+}
+
+.faq-answer {
+  padding: var(--space-4) var(--space-5);
+  color: var(--color-muted);
+  font-size: 0.9375rem;
+  border-top: 1px solid var(--color-border);
+  background: var(--color-white);
+}
+
+/* Opgemaakte tekst uit Shopify */
+.rte h2,
+.rte h3 {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  margin-top: var(--space-6);
+  margin-bottom: var(--space-2);
+}
+
+.rte ul,
+.rte ol {
+  padding-left: var(--space-6);
+  margin-bottom: var(--space-4);
+}
+
+.rte ul {
+  list-style: disc;
+}
+
+.rte ol {
+  list-style: decimal;
+}
+
+.rte li {
+  margin-bottom: var(--space-1);
+}
+
+.rte a {
+  color: var(--color-accent);
+  text-decoration: underline;
+}
+
+.rte p {
+  color: var(--color-muted);
+}
+
+.specs-table {
+  width: 100%;
+  font-size: 0.9375rem;
+}
+
+.specs-table th,
+.specs-table td {
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+  text-align: left;
+}
+
+.specs-table th {
+  width: 40%;
+  font-weight: 600;
+  color: var(--color-text);
+  background: var(--color-bg);
+}
+
+.specs-table td {
+  color: var(--color-muted);
+}
