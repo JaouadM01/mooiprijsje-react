@@ -73,7 +73,7 @@ describe('Header search', () => {
     const user = userEvent.setup()
     renderLayout()
 
-    await user.type(screen.getByRole('searchbox'), 'iphone 13{Enter}')
+    await user.type(screen.getByRole('combobox'), 'iphone 13{Enter}')
     expect(screen.getByTestId('location')).toHaveTextContent('/search?q=iphone%2013')
   })
 
@@ -81,13 +81,13 @@ describe('Header search', () => {
     const user = userEvent.setup()
     renderLayout()
 
-    await user.type(screen.getByRole('searchbox'), '   {Enter}')
+    await user.type(screen.getByRole('combobox'), '   {Enter}')
     expect(screen.getByTestId('location')).toHaveTextContent(/^\/$/)
   })
 
   it('prefills the box with the current search term', () => {
     renderLayout('/search?q=batterij')
-    expect(screen.getByRole('searchbox')).toHaveValue('batterij')
+    expect(screen.getByRole('combobox')).toHaveValue('batterij')
   })
 
   it('opens the mobile search overlay and focuses the input', async () => {
@@ -95,7 +95,7 @@ describe('Header search', () => {
     renderLayout()
 
     await user.click(screen.getByRole('button', { name: 'Zoeken openen' }))
-    const searchboxes = screen.getAllByRole('searchbox')
+    const searchboxes = screen.getAllByRole('combobox')
     expect(searchboxes).toHaveLength(2)
     expect(searchboxes[1]).toHaveFocus()
   })

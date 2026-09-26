@@ -106,7 +106,7 @@
   width: 20px;
   height: 20px;
   background: var(--color-accent);
-  color: var(--color-white);
+  color: var(--color-on-accent);
   border-radius: 50%;
   font-size: 0.75rem;
   font-weight: 700;
@@ -229,7 +229,7 @@ select.collection__sort-select {
   background: none;
   border: none;
   font-size: 0.875rem;
-  color: var(--color-accent);
+  color: var(--color-accent-text);
   text-decoration: underline;
   cursor: pointer;
 }
@@ -339,7 +339,7 @@ select.collection__sort-select {
 .filter-price__apply {
   padding: 8px 16px;
   background: var(--color-accent);
-  color: var(--color-white);
+  color: var(--color-on-accent);
   border: none;
   border-radius: var(--radius-sm);
   font-size: 0.875rem;
@@ -349,7 +349,7 @@ select.collection__sort-select {
 }
 
 .filter-price__apply:hover {
-  background: var(--color-accent-dark);
+  background: var(--color-accent-hover);
 }
 
 .collection__main {
@@ -422,5 +422,5 @@ select.collection__sort-select {
 
 .pagination__link:hover {
   border-color: var(--color-accent);
-  color: var(--color-accent);
+  color: var(--color-accent-text);
 }

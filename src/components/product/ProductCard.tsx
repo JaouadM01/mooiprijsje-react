@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useCart } from '@/context/CartContext'
 import { formatMoney } from '@/lib/money'
-import { isOnSale, savingsPercent } from '@/lib/pricing'
+import { badgeSavingsPercent, isOnSale } from '@/lib/pricing'
 import type { ProductSummary } from '@/types/shop'
 import { ImagePlaceholder } from '../common/Icon'
 import './product.css'
@@ -14,6 +14,7 @@ export function ProductCard({ product }: { readonly product: ProductSummary }) {
 
   const href = `/products/${product.handle}`
   const onSale = isOnSale(product.price, product.compareAtPrice)
+  const badgePercent = badgeSavingsPercent(product.price, product.compareAtPrice)
   const canAdd = product.available && product.defaultVariantId !== null
 
   const handleAdd = async (): Promise<void> => {
@@ -53,10 +54,8 @@ export function ProductCard({ product }: { readonly product: ProductSummary }) {
           ) : (
             <ImagePlaceholder className="product-card__img" />
           )}
-          {onSale && (
-            <span className="product-card__badge product-card__badge--sale">
-              &#8722;{savingsPercent(product.price, product.compareAtPrice)}%
-            </span>
+          {badgePercent !== null && (
+            <span className="product-card__badge product-card__badge--sale">&#8722;{badgePercent}%</span>
           )}
           {!product.available && <span className="product-card__badge product-card__badge--sold-out">Uitverkocht</span>}
         </div>

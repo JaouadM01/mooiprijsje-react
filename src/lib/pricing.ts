@@ -15,6 +15,15 @@ export function savingsPercent(price: Money, compareAt: Money | null): number {
   return Math.round(((compareAt.amount - price.amount) * 100) / compareAt.amount)
 }
 
+/**
+ * Percentage voor een kortingsbadge, of null als de korting afgerond onder 1% uitkomt
+ * (bijvoorbeeld € 19,95 i.p.v. € 19,99): een badge "−0%" oogt als een fout.
+ */
+export function badgeSavingsPercent(price: Money, compareAt: Money | null): number | null {
+  const percent = savingsPercent(price, compareAt)
+  return percent >= 1 ? percent : null
+}
+
 export function stockLevel(variant: Pick<ProductVariant, 'available' | 'quantityAvailable'>): StockLevel {
   if (!variant.available) return 'out'
   const quantity = variant.quantityAvailable

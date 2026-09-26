@@ -24,7 +24,7 @@
 }
 
 .breadcrumb__link:hover {
-  color: var(--color-accent);
+  color: var(--color-accent-text);
 }
 
 .breadcrumb__sep {
@@ -99,7 +99,7 @@
 .faq-question::after {
   content: '+';
   font-size: 1.25rem;
-  color: var(--color-accent);
+  color: var(--color-accent-text);
 }
 
 details[open] > .faq-question::after {
@@ -146,7 +146,7 @@ details[open] > .faq-question::after {
 }
 
 .rte a {
-  color: var(--color-accent);
+  color: var(--color-accent-text);
   text-decoration: underline;
 }
 

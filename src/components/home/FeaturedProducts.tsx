@@ -1,22 +1,11 @@
 import { Link } from 'react-router-dom'
-import { FEATURED } from '@/config/home'
+import type { ProductRail } from '@/config/home'
 import { useCollection } from '@/hooks/useShopData'
 import type { CollectionQuery } from '@/types/shop'
 import { Icon } from '../common/Icon'
 import { ErrorState } from '../common/StatusMessage'
 import { ProductCard } from '../product/ProductCard'
 import './home.css'
-
-const FEATURED_QUERY: CollectionQuery = {
-  handle: FEATURED.collectionHandle,
-  sort: 'manual',
-  filters: [],
-  priceMin: null,
-  priceMax: null,
-  after: null,
-  before: null,
-  pageSize: FEATURED.limit,
-}
 
 export function ProductGridSkeleton({ count }: { readonly count: number }) {
   return (
@@ -33,30 +22,51 @@ export function ProductGridSkeleton({ count }: { readonly count: number }) {
   )
 }
 
-export function FeaturedProducts() {
-  const { data, isPending, isError, refetch } = useCollection(FEATURED_QUERY)
+interface FeaturedProductsProps {
+  readonly rail: ProductRail
+  /** De eerste rij staat direct onder de header en krijgt compactere ruimte. */
+  readonly isSpotlight?: boolean
+}
+
+export function FeaturedProducts({ rail, isSpotlight = false }: FeaturedProductsProps) {
+  const query: CollectionQuery = {
+    handle: rail.collectionHandle,
+    sort: rail.sort,
+    filters: [],
+    priceMin: null,
+    priceMax: null,
+    after: null,
+    before: null,
+    pageSize: rail.limit,
+  }
+  const { data, isPending, isError, refetch } = useCollection(query)
   const products = data?.products ?? []
+  const titleId = `rail-${rail.id}-title`
 
   return (
-    <section className="featured-products" aria-labelledby="featured-title">
+    <section
+      className={isSpotlight ? 'featured-products featured-products--spotlight' : 'featured-products'}
+      aria-labelledby={titleId}
+    >
       <div className="featured-products__container">
         <div className="featured-products__header">
           <div>
-            <h2 id="featured-title" className="featured-products__title">
-              {FEATURED.title}
+            <p className="featured-products__eyebrow">{rail.eyebrow}</p>
+            <h2 id={titleId} className="featured-products__title">
+              {rail.title}
             </h2>
-            <p className="featured-products__subtitle">{FEATURED.subtitle}</p>
+            <p className="featured-products__subtitle">{rail.subtitle}</p>
           </div>
-          <Link to={FEATURED.ctaTo} className="featured-products__header-cta">
-            {FEATURED.ctaLabel}
+          <Link to={rail.ctaTo} className="featured-products__header-cta">
+            {rail.ctaLabel}
             <Icon name="arrow-right" size={18} strokeWidth={2.5} />
           </Link>
         </div>
 
-        {isPending && <ProductGridSkeleton count={FEATURED.limit} />}
-        {isError && <ErrorState message="De bestsellers konden niet worden geladen." onRetry={() => void refetch()} />}
+        {isPending && <ProductGridSkeleton count={rail.limit} />}
+        {isError && <ErrorState message="De producten konden niet worden geladen." onRetry={() => void refetch()} />}
         {!isPending && !isError && products.length === 0 && (
-          <p className="featured-products__empty">Er zijn nog geen uitgelichte producten.</p>
+          <p className="featured-products__empty">Er zijn hier nog geen producten.</p>
         )}
         {products.length > 0 && (
           <div className="product-grid">

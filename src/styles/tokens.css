@@ -2,7 +2,8 @@
 :root {
   /* Kleuren */
   --color-primary: #1b2a5e;
-  --color-accent: #2b7fff;
+  /* Accent = oranje. Op oranje staat donkerblauwe tekst (4.8:1, WCAG AA); wit haalt dat niet. */
+  --color-accent: #ff6b2b;
   --color-sale: #ff6b2b;
   --color-text: #1a1a2e;
   --color-bg: #f5f7fa;
@@ -13,8 +14,12 @@
   --color-danger: #ef4444;
 
   --color-primary-dark: #142050;
-  --color-accent-dark: #1a6ae8;
-  --color-accent-light: #ebf2ff;
+  --color-accent-dark: #9a3412;
+  --color-accent-hover: #ff8a55;
+  --color-accent-light: #fff1ea;
+  /* Oranje als tekst op wit (5.2:1). */
+  --color-accent-text: #c2410c;
+  --color-on-accent: #1b2a5e;
 
   /* Typografie */
   --font-heading: 'Poppins', sans-serif;

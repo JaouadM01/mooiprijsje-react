@@ -16,11 +16,13 @@ const articleTitles = () =>
 describe('home page', () => {
   it('shows every section', async () => {
     renderApp('/')
-    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Alles voor jouw telefoon')
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('telefoonschermen, onderdelen en accessoires')
     expect(screen.getByRole('heading', { name: 'Shop per categorie' })).toBeInTheDocument()
-    // Ook de reviews zijn <article>-elementen, dus zoek binnen de bestsellers-sectie.
-    const bestsellers = screen.getByRole('region', { name: 'Onze bestsellers' })
-    expect(await within(bestsellers).findAllByRole('article')).toHaveLength(8)
+    // Ook de reviews zijn <article>-elementen, dus zoek binnen de productrijen.
+    const spotlight = screen.getByRole('region', { name: 'Topdeals van deze week' })
+    expect(await within(spotlight).findAllByRole('article')).toHaveLength(8)
+    const newArrivals = screen.getByRole('region', { name: 'Net binnengekomen' })
+    expect(await within(newArrivals).findAllByRole('article')).toHaveLength(4)
     expect(screen.getByRole('heading', { name: 'Wat onze klanten zeggen' })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'Ontvang 10% korting' })).toBeInTheDocument()
     expect(document.title).toBe('mooiprijsje.nl')
@@ -209,8 +211,8 @@ describe('search page', () => {
     renderApp('/search?q=batterij', createTestServices({ shop: { ...base, searchProducts } }))
     await within(main()).findAllByRole('article')
 
-    await user.clear(screen.getByRole('searchbox'))
-    await user.type(screen.getByRole('searchbox'), 'kabel{Enter}')
+    await user.clear(screen.getByRole('combobox'))
+    await user.type(screen.getByRole('combobox'), 'kabel{Enter}')
 
     expect(await screen.findByRole('heading', { level: 1, name: 'Zoekresultaten voor “kabel”' })).toBeInTheDocument()
     expect(within(main()).queryByText('Batterij iPhone 12')).not.toBeInTheDocument()

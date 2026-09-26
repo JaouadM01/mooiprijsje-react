@@ -18,7 +18,7 @@ export function Layout() {
 
       {meta.isDemo && (
         <div className="demo-banner" role="note">
-          Demo-modus: dit zijn voorbeeldproducten. Koppel je Shopify-winkel via het .env-bestand.
+          Demo-modus: testwebsite met producten en prijzen uit de winkel van mooiprijsje.nl. Afrekenen staat uit.
         </div>
       )}
       <AnnouncementBar />

@@ -2,12 +2,12 @@ import { act, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { createMockShopRepository } from '@/data/mock/mockShopRepository'
 import { ShopApiError } from '@/data/errors'
+import { NEW_ARRIVALS, SPOTLIGHT } from '@/config/home'
 import { createTestServices, renderWithProviders } from '@/test/utils'
 import { CategoryGrid } from './CategoryGrid'
 import { FeaturedProducts } from './FeaturedProducts'
-import { Hero } from './Hero'
 import { Newsletter } from './Newsletter'
-import { Testimonials } from './Testimonials'
+import { Testimonials, averageRating } from './Testimonials'
 import { UspBar } from './UspBar'
 
 const originalMatchMedia = window.matchMedia
@@ -25,16 +25,6 @@ function mockMatchMedia(matching: (query: string) => boolean): void {
     removeEventListener: () => undefined,
   })) as unknown as typeof window.matchMedia
 }
-
-describe('Hero', () => {
-  it('shows the headline and both calls to action', () => {
-    renderWithProviders(<Hero />)
-    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Alles voor jouw telefoon')
-    expect(screen.getByRole('link', { name: 'Bekijk assortiment' })).toHaveAttribute('href', '/collections/all')
-    expect(screen.getByRole('link', { name: 'Schermen bekijken' })).toHaveAttribute('href', '/collections/schermen')
-    expect(screen.getByRole('img', { name: '5 van de 5 sterren' })).toBeInTheDocument()
-  })
-})
 
 describe('UspBar and CategoryGrid', () => {
   it('lists four selling points', () => {
@@ -56,16 +46,32 @@ describe('UspBar and CategoryGrid', () => {
 })
 
 describe('FeaturedProducts', () => {
-  it('shows the bestsellers from the frontpage collection', async () => {
-    renderWithProviders(<FeaturedProducts />)
-    expect(await screen.findAllByRole('article')).toHaveLength(8)
-    expect(screen.getByRole('link', { name: /Bekijk alle producten/ })).toHaveAttribute('href', '/collections/all')  })
+  it('shows the spotlight products from the frontpage collection with a label', async () => {
+    renderWithProviders(<FeaturedProducts rail={SPOTLIGHT} isSpotlight />)
+    const section = screen.getByRole('region', { name: 'Topdeals van deze week' })
+    expect(within(section).getByText('Uitgelicht')).toBeInTheDocument()
+    expect(await within(section).findAllByRole('article')).toHaveLength(8)
+    expect(within(section).getByRole('link', { name: /Bekijk alle producten/ })).toHaveAttribute('href', '/collections/all')
+  })
+
+  it('shows the newest products first in the new-arrivals rail', async () => {
+    const base = createMockShopRepository({ latencyMs: 0 })
+    const getCollection = vi.fn(base.getCollection)
+    renderWithProviders(<FeaturedProducts rail={NEW_ARRIVALS} />, { services: createTestServices({ shop: { ...base, getCollection } }) })
+
+    expect(await screen.findAllByRole('article')).toHaveLength(4)
+    expect(getCollection).toHaveBeenCalledWith(expect.objectContaining({ handle: 'all', sort: 'created-descending', pageSize: 4 }))
+    expect(screen.getByRole('link', { name: /Bekijk alle nieuwe producten/ })).toHaveAttribute(
+      'href',
+      '/collections/all?sort=created-descending',
+    )
+  })
 
   it('shows an error and recovers on retry', async () => {
     const base = createMockShopRepository({ latencyMs: 0 })
     const getCollection = vi.fn().mockRejectedValueOnce(new ShopApiError('kapot')).mockImplementation(base.getCollection)
     const user = userEvent.setup()
-    renderWithProviders(<FeaturedProducts />, { services: createTestServices({ shop: { ...base, getCollection } }) })
+    renderWithProviders(<FeaturedProducts rail={SPOTLIGHT} />, { services: createTestServices({ shop: { ...base, getCollection } }) })
 
     expect(await screen.findByRole('alert')).toHaveTextContent('konden niet worden geladen')
     await user.click(screen.getByRole('button', { name: 'Opnieuw proberen' }))
@@ -75,8 +81,42 @@ describe('FeaturedProducts', () => {
   it('shows a message when the collection does not exist', async () => {
     const base = createMockShopRepository({ latencyMs: 0 })
     const shop = { ...base, getCollection: () => Promise.resolve(null) }
-    renderWithProviders(<FeaturedProducts />, { services: createTestServices({ shop }) })
-    expect(await screen.findByText('Er zijn nog geen uitgelichte producten.')).toBeInTheDocument()
+    renderWithProviders(<FeaturedProducts rail={SPOTLIGHT} />, { services: createTestServices({ shop }) })
+    expect(await screen.findByText('Er zijn hier nog geen producten.')).toBeInTheDocument()
+  })
+})
+
+describe('averageRating', () => {
+  it('rounds the average to one decimal', () => {
+    expect(averageRating([5, 5, 5, 4, 5, 5])).toBe(4.8)
+    expect(averageRating([4, 5])).toBe(4.5)
+  })
+
+  it('returns 0 without ratings', () => {
+    expect(averageRating([])).toBe(0)
+  })
+})
+
+describe('Google reviews summary', () => {
+  it('shows the Google score, the review count and a link to Google', () => {
+    renderWithProviders(<Testimonials />)
+    expect(screen.getByText('Google-reviews')).toBeInTheDocument()
+    expect(screen.getByText('4,8')).toBeInTheDocument()
+    expect(screen.getByRole('img', { name: '4,8 van de 5 sterren' })).toBeInTheDocument()
+    expect(screen.getByText('Gebaseerd op 6 reviews')).toBeInTheDocument()
+
+    const link = screen.getByRole('link', { name: /Bekijk alle reviews op Google/ })
+    expect(link).toHaveAttribute('target', '_blank')
+    expect(link).toHaveAttribute('rel', 'noopener noreferrer')
+  })
+
+  it('says the reviews are examples only in demo mode', () => {
+    const { unmount } = renderWithProviders(<Testimonials />)
+    expect(screen.getByText(/Voorbeeldreviews/)).toBeInTheDocument()
+    unmount()
+
+    renderWithProviders(<Testimonials />, { services: createTestServices({ meta: { isDemo: false, accountUrl: null } }) })
+    expect(screen.queryByText(/Voorbeeldreviews/)).not.toBeInTheDocument()
   })
 })
 

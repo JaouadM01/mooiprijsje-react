@@ -73,11 +73,11 @@ export const FAQ_ITEMS: readonly FaqItem[] = [
   {
     question: 'Hoe lang duurt de levering?',
     answer:
-      'Bij bestelling voor 22:00 uur op een werkdag leveren wij je pakket de volgende werkdag. We verzenden via PostNL. Je ontvangt een track & trace e-mail zodra je pakket onderweg is.',
+      'Bij bestelling op een werkdag voor 16:00 uur leveren wij je pakket de volgende werkdag. We verzenden via PostNL. Je ontvangt een track & trace e-mail zodra je pakket onderweg is.',
   },
   {
     question: 'Wat zijn de verzendkosten?',
-    answer: 'Bij bestellingen vanaf €20 verzenden wij gratis. Bij bestellingen onder de €20 rekenen wij €2,99 verzendkosten.',
+    answer: 'Wij verzenden al onze producten gratis, zonder bijkomende kosten.',
   },
   {
     question: 'Hoe kan ik een product retourneren?',
@@ -110,7 +110,7 @@ export const PRODUCT_FAQ_ITEMS: readonly FaqItem[] = [
   },
   {
     question: 'Hoe lang duurt de levering?',
-    answer: 'Bij bestelling voor 22:00 uur leveren wij je bestelling de volgende werkdag. Gratis verzending bij bestellingen vanaf €20.',
+    answer: 'Op werkdagen voor 16:00 uur besteld, is morgen in huis. Verzending is altijd gratis.',
   },
   {
     question: 'Is dit een origineel product?',
@@ -127,10 +127,9 @@ export const SHIPPING_SECTIONS: readonly InfoSection[] = [
   {
     heading: 'Verzending',
     items: [
-      'Gratis verzending bij bestellingen vanaf €20',
+      'Gratis verzending op alle bestellingen',
       'Standaard levering: 1–2 werkdagen via PostNL',
-      'Besteld voor 22:00? Morgen in huis (werkdagen)',
-      'Bezorgkosten: €2,99 bij bestellingen onder €20',
+      'Op werkdagen voor 16:00 besteld? Morgen in huis',
     ],
   },
 ]
@@ -148,7 +147,7 @@ export const RETURN_SECTIONS: readonly InfoSection[] = [
 ]
 
 export const PRODUCT_USPS: readonly string[] = [
-  'Gratis verzending vanaf €20',
+  'Altijd gratis verzending',
   '14 dagen retour',
   'Veilig betalen',
   'Vandaag besteld, morgen in huis*',

@@ -163,6 +163,15 @@ describe('searchProducts', () => {
     expect(result.totalCount).toBe(1)
   })
 
+  it('lists products with the words in their title before matches on type or brand', async () => {
+    const result = await search('scherm')
+    const titles = result.products.map((p) => p.title.toLowerCase())
+    const firstWithout = titles.findIndex((title) => !title.includes('scherm'))
+    const lastWith = titles.map((title) => title.includes('scherm')).lastIndexOf(true)
+    expect(lastWith).toBeGreaterThanOrEqual(0)
+    if (firstWithout !== -1) expect(firstWithout).toBeGreaterThan(lastWith)
+  })
+
   it('is case-insensitive', async () => {
     expect((await search('IPHONE')).totalCount).toBeGreaterThan(0)
   })

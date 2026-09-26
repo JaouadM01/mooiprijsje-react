@@ -45,6 +45,26 @@ export function useSearchProducts(query: SearchQuery) {
   })
 }
 
+export const MIN_LIVE_SEARCH_LENGTH = 2
+export const LIVE_SEARCH_LIMIT = 6
+const LIVE_SEARCH_STALE_MS = 60_000
+
+/**
+ * Suggesties voor de zoekbalk. Tijdens verder typen blijven de vorige suggesties staan,
+ * zodat de lijst niet steeds leeg flitst.
+ */
+export function useLiveSearch(term: string) {
+  const { shop } = useServices()
+  const trimmed = term.trim()
+  return useQuery({
+    queryKey: ['live-search', trimmed.toLowerCase()],
+    queryFn: () => shop.searchProducts({ term: trimmed, after: null, before: null, pageSize: LIVE_SEARCH_LIMIT }),
+    enabled: trimmed.length >= MIN_LIVE_SEARCH_LENGTH,
+    placeholderData: (previous) => previous,
+    staleTime: LIVE_SEARCH_STALE_MS,
+  })
+}
+
 export function useNewsletterMutation() {
   const { forms } = useServices()
   return useMutation({ mutationFn: (email: string) => forms.subscribeNewsletter(email) })

@@ -244,7 +244,7 @@
 
 .about__hero-tag {
   display: inline-block;
-  background: rgba(43, 127, 255, 0.2);
+  background: rgba(255, 107, 43, 0.2);
   color: var(--color-accent-light);
   padding: 6px 16px;
   border-radius: var(--radius-full);

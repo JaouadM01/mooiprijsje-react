@@ -1,6 +1,7 @@
 import type { Product, ProductVariant } from '@/types/shop'
 import { money } from './money'
 import {
+  badgeSavingsPercent,
   defaultVariant,
   findVariant,
   isOnSale,
@@ -86,5 +87,19 @@ describe('variant helpers', () => {
   it('marks option values that only exist as sold out combinations as unavailable', () => {
     expect(isOptionValueAvailable(product, { Kleur: 'Wit', Lengte: '2m' }, 'Lengte', '1m')).toBe(false)
     expect(isOptionValueAvailable(product, { Kleur: 'Wit', Lengte: '1m' }, 'Lengte', '2m')).toBe(true)
+  })
+})
+
+describe('badgeSavingsPercent', () => {
+  it('returns the rounded percentage for a real discount', () => {
+    expect(badgeSavingsPercent(money(1895), money(2495))).toBe(24)
+  })
+
+  it('hides a discount that rounds to 0%', () => {
+    expect(badgeSavingsPercent(money(1995), money(1999))).toBeNull()
+  })
+
+  it('is null without a compare-at price', () => {
+    expect(badgeSavingsPercent(money(1995), null)).toBeNull()
   })
 })

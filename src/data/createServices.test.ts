@@ -18,7 +18,8 @@ describe('createServices', () => {
   it('uses demo data without Shopify credentials', async () => {
     const services = createServices(demo)
     expect(services.meta).toEqual({ isDemo: true, accountUrl: null })
-    expect((await services.shop.getProduct('snellader-20w-usb-c'))?.title).toBe('Snellader 20W USB-C')
+    // De demo toont de echte producten van mooiprijsje.nl (zie storeSnapshot.ts).
+    expect((await services.shop.getProduct('novanl-maglock-wireless'))?.title).toBe('NOVANL MagLock Wireless')
   })
 
   it('lets demo forms succeed without sending anything', async () => {

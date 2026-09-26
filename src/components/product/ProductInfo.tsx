@@ -6,7 +6,7 @@ import {
   defaultVariant,
   findVariant,
   isOnSale,
-  savingsPercent,
+  badgeSavingsPercent,
   selectionFromVariant,
   stockLevel,
   type OptionSelection,
@@ -86,9 +86,11 @@ export function ProductInfo({ product }: { readonly product: Product }) {
                   <span className="sr-only">Was </span>
                   <s>{formatMoney(variant.compareAtPrice)}</s>
                 </span>
-                <span className="product__badge product__badge--sale">
-                  Bespaar {savingsPercent(variant.price, variant.compareAtPrice)}%
-                </span>
+                {badgeSavingsPercent(variant.price, variant.compareAtPrice) !== null && (
+                  <span className="product__badge product__badge--sale">
+                    Bespaar {badgeSavingsPercent(variant.price, variant.compareAtPrice)}%
+                  </span>
+                )}
               </>
             )}
           </div>

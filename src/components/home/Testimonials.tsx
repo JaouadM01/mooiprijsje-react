@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState, type CSSProperties, type TouchEvent } from 'react'
 import { TESTIMONIALS } from '@/config/home'
+import { useServices } from '@/context/ServicesContext'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { Icon } from '../common/Icon'
 import './home.css'
@@ -8,15 +9,27 @@ const AUTOPLAY_INTERVAL_MS = 5000
 const SWIPE_THRESHOLD_PX = 40
 const STAR_PATH = 'M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z'
 
-function Stars({ rating }: { readonly rating: number }) {
+function GoogleLogo({ size = 20 }: { readonly size?: number }) {
   return (
-    <div className="review-card__stars" role="img" aria-label={`${rating} van de 5 sterren`}>
+    <svg width={size} height={size} viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+      <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z" />
+      <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z" />
+      <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z" />
+      <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z" />
+    </svg>
+  )
+}
+
+function Stars({ rating, size = 18 }: { readonly rating: number; readonly size?: number }) {
+  const rounded = Math.round(rating)
+  return (
+    <div className="review-card__stars" role="img" aria-label={`${rating.toLocaleString('nl-NL')} van de 5 sterren`}>
       {[1, 2, 3, 4, 5].map((position) => (
-        <svg key={position} width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+        <svg key={position} width={size} height={size} viewBox="0 0 24 24" aria-hidden="true">
           <path
             d={STAR_PATH}
-            fill={position <= rating ? '#FBBF24' : '#E5E7EB'}
-            stroke={position <= rating ? '#F59E0B' : '#D1D5DB'}
+            fill={position <= rounded ? '#FBBF24' : '#E5E7EB'}
+            stroke={position <= rounded ? '#F59E0B' : '#D1D5DB'}
             strokeWidth="1"
           />
         </svg>
@@ -25,8 +38,16 @@ function Stars({ rating }: { readonly rating: number }) {
   )
 }
 
+/** Gemiddelde op één decimaal, zoals Google het toont. */
+export function averageRating(ratings: readonly number[]): number {
+  if (ratings.length === 0) return 0
+  return Math.round((ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length) * 10) / 10
+}
+
 export function Testimonials() {
   const { reviews } = TESTIMONIALS
+  const { meta } = useServices()
+  const average = averageRating(reviews.map((review) => review.rating))
   const isPhone = useMediaQuery('(max-width: 560px)')
   const isTablet = useMediaQuery('(max-width: 900px)')
   const prefersReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)')
@@ -79,6 +100,38 @@ export function Testimonials() {
           <p className="testimonials__subtitle">{TESTIMONIALS.subheading}</p>
         </div>
 
+        <div className="google-summary">
+          <div className="google-summary__brand">
+            <GoogleLogo size={28} />
+            <span className="google-summary__label">Google-reviews</span>
+          </div>
+          <div className="google-summary__score">
+            <strong className="google-summary__average">{average.toLocaleString('nl-NL', { minimumFractionDigits: 1 })}</strong>
+            <div>
+              <Stars rating={average} size={20} />
+              <span className="google-summary__count">
+                Gebaseerd op {reviews.length} {reviews.length === 1 ? 'review' : 'reviews'}
+              </span>
+            </div>
+          </div>
+          {TESTIMONIALS.googleUrl && (
+            <a
+              href={TESTIMONIALS.googleUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-outline google-summary__cta"
+            >
+              Bekijk alle reviews op Google
+              <span className="sr-only"> (opent in een nieuw tabblad)</span>
+            </a>
+          )}
+        </div>
+        {meta.isDemo && (
+          <p className="google-summary__demo-note">
+            Voorbeeldreviews. In de live winkel staan hier automatisch de echte reviews van jullie Google-bedrijfsprofiel.
+          </p>
+        )}
+
         <div
           className="testimonials__carousel"
           role="region"
@@ -116,9 +169,9 @@ export function Testimonials() {
                         {review.city} &bull; {review.date}
                       </span>
                     </div>
-                    <div className="review-card__verified" title="Geverifieerde aankoop">
-                      <Icon name="badge-check" size={16} className="review-card__verified-icon" />
-                      <span className="sr-only">Geverifieerde aankoop</span>
+                    <div className="review-card__verified" title="Review op Google">
+                      <GoogleLogo size={18} />
+                      <span className="sr-only">Review op Google</span>
                     </div>
                   </footer>
                 </article>

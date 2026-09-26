@@ -1,13 +1,7 @@
-export const HERO = {
-  heading: 'Alles voor jouw telefoon — voor een mooie prijs',
-  subheading: 'Schermen, accessoires en onderdelen. Snelle levering, eerlijke prijs.',
-  trustLine: 'Meer dan 10.000 tevreden klanten',
-  primaryCta: { label: 'Bekijk assortiment', to: '/collections/all' },
-  secondaryCta: { label: 'Schermen bekijken', to: '/collections/schermen' },
-  quickTrust: ['Gratis verzending', '14 dagen retour', 'Veilig betalen'],
-  badge: { title: 'Vandaag besteld', text: 'morgen in huis' },
-  waveColor: '#F5F7FA',
-} as const
+import type { CollectionSort } from '@/types/shop'
+
+/** Onzichtbare paginatitel: de homepage begint direct met producten (geen banner). */
+export const HOME_HEADING = 'mooiprijsje.nl: telefoonschermen, onderdelen en accessoires voor een mooie prijs'
 
 export type UspIcon = 'cart' | 'badge' | 'refresh' | 'shield'
 
@@ -26,28 +20,79 @@ export const USPS: readonly Usp[] = [
 
 export interface Category {
   readonly name: string
-  readonly icon: string
+  readonly tagline: string
   readonly to: string
-  readonly background: string
+  /** Sfeerfoto van de categorie (productfoto uit de winkel). */
+  readonly image: string
 }
 
+const CDN = 'https://cdn.shopify.com/s/files/1/0892/3614/4461/files'
+
 export const CATEGORIES: readonly Category[] = [
-  { name: 'Schermen', icon: '📱', to: '/collections/schermen', background: '#DBEAFE' },
-  { name: 'Laadpoorten', icon: '🔌', to: '/collections/laadpoorten', background: '#D1FAE5' },
-  { name: 'Accessoires', icon: '🎧', to: '/collections/accessoires', background: '#EDE9FE' },
-  { name: 'Onderdelen', icon: '🔧', to: '/collections/onderdelen', background: '#FEF3C7' },
+  {
+    name: 'Schermen',
+    tagline: 'iPhone, Samsung, Google',
+    to: '/collections/schermen',
+    image: `${CDN}/35113A8B18_B.webp?v=1747217238&width=600`,
+  },
+  {
+    name: 'Laadpoorten',
+    tagline: 'Dock connectors en flexkabels',
+    to: '/collections/laadpoorten',
+    image: `${CDN}/21030-replacement-for-iphone-12-12-pro-usb-charging-flex-cable-white-1-clyknk2z.jpg?v=1747676145&width=600`,
+  },
+  {
+    name: 'Accessoires',
+    tagline: 'Laders, hoesjes en audio',
+    to: '/collections/accessoires',
+    image: `${CDN}/TFgizO3AAmX3qjvpM11nYJqa86okGw-metaMS5qcGc_--large.jpg?v=1747903153&width=600`,
+  },
+  {
+    name: 'Onderdelen',
+    tagline: 'Batterijen, lijm en meer',
+    to: '/collections/onderdelen',
+    image: `${CDN}/b7000-super-glue-adhesive-mobile-repair-phones-2-poxmkjkr.jpg?v=1747727673&width=600`,
+  },
 ]
 
 export const CATEGORY_GRID_TITLE = 'Shop per categorie'
 
-export const FEATURED = {
+export interface ProductRail {
+  readonly id: string
+  readonly eyebrow: string
+  readonly title: string
+  readonly subtitle: string
+  readonly collectionHandle: string
+  readonly sort: CollectionSort
+  readonly limit: number
+  readonly ctaLabel: string
+  readonly ctaTo: string
+}
+
+/** Direct bovenaan de homepage (feedback: producten in plaats van een banner). */
+export const SPOTLIGHT: ProductRail = {
+  id: 'uitgelicht',
+  eyebrow: 'Uitgelicht',
+  title: 'Topdeals van deze week',
+  subtitle: 'Onze populairste producten, scherp geprijsd en direct leverbaar',
   collectionHandle: 'frontpage',
+  sort: 'manual',
   limit: 8,
-  title: 'Onze bestsellers',
-  subtitle: 'De meest gekochte producten van dit moment',
   ctaLabel: 'Bekijk alle producten',
   ctaTo: '/collections/all',
-} as const
+}
+
+export const NEW_ARRIVALS: ProductRail = {
+  id: 'nieuw',
+  eyebrow: 'Nieuw binnen',
+  title: 'Net binnengekomen',
+  subtitle: 'De nieuwste onderdelen en accessoires in ons assortiment',
+  collectionHandle: 'all',
+  sort: 'created-descending',
+  limit: 4,
+  ctaLabel: 'Bekijk alle nieuwe producten',
+  ctaTo: '/collections/all?sort=created-descending',
+}
 
 export interface Review {
   readonly text: string
@@ -59,7 +104,9 @@ export interface Review {
 
 export const TESTIMONIALS = {
   heading: 'Wat onze klanten zeggen',
-  subheading: 'Meer dan 10.000 tevreden klanten gingen je voor',
+  subheading: 'Beoordelingen van klanten op Google',
+  /** Link naar het Google-bedrijfsprofiel; leeg = knop niet tonen. */
+  googleUrl: 'https://www.google.com/search?q=mooiprijsje.nl+reviews',
   reviews: [
     {
       text: 'Wauw, wat een snelle levering! Besteld op maandagavond en dinsdagochtend al in huis. Het scherm van mijn iPhone zit er perfect op, precies zoals het origineel. Heel blij mee!',

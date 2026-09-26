@@ -233,13 +233,17 @@ export function createMockShopRepository(options: MockShopOptions = {}): ShopRep
     async searchProducts(query): Promise<SearchResult> {
       await wait()
       const terms = query.term.toLowerCase().split(/\s+/).filter(Boolean)
-      const matches =
+      const found =
         terms.length === 0
           ? []
           : products.filter((product) => {
               const haystack = `${product.title} ${product.vendor} ${product.productType}`.toLowerCase()
               return terms.every((term) => haystack.includes(term))
             })
+      // Relevantie: producten waarbij alle woorden in de titel staan komen eerst (sort is stabiel).
+      const inTitle = (product: Product): number =>
+        terms.every((term) => product.title.toLowerCase().includes(term)) ? 0 : 1
+      const matches = [...found].sort((a, b) => inTitle(a) - inTitle(b))
       const { page, pageInfo } = paginate(matches, query)
       return { products: page.map(toProductSummary), pageInfo, totalCount: matches.length }
     },

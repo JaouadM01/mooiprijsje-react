@@ -32,14 +32,14 @@ interface Seed {
   readonly rules?: readonly VariantRule[]
 }
 
-const CATEGORY_TITLES: Readonly<Record<MockCategory, string>> = {
+export const CATEGORY_TITLES: Readonly<Record<MockCategory, string>> = {
   schermen: 'Schermen',
   laadpoorten: 'Laadpoorten',
   accessoires: 'Accessoires',
   onderdelen: 'Onderdelen',
 }
 
-const CATEGORY_DESCRIPTIONS: Readonly<Record<MockCategory, string>> = {
+export const CATEGORY_DESCRIPTIONS: Readonly<Record<MockCategory, string>> = {
   schermen: 'Vervangende schermen voor iPhone, Samsung en meer, voor een mooie prijs.',
   laadpoorten: 'Laadpoorten en flexkabels om je toestel weer betrouwbaar op te laden.',
   accessoires: 'Kabels, laders, hoesjes en meer voor jouw telefoon.',

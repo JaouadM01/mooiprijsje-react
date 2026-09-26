@@ -1,48 +1,13 @@
-import { useEffect, useRef, useState, type FormEvent } from 'react'
-import { Link, NavLink, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
+import { useEffect, useRef, useState } from 'react'
+import { Link, NavLink, useLocation, useSearchParams } from 'react-router-dom'
 import { MAIN_NAV, SITE } from '@/config/site'
 import { useCart } from '@/context/CartContext'
 import { useServices } from '@/context/ServicesContext'
 import { Icon } from '../common/Icon'
+import { LiveSearch } from './LiveSearch'
 import { MobileNav } from './MobileNav'
 
 const STICKY_SCROLL_THRESHOLD_PX = 60
-
-interface SearchFormProps {
-  readonly variant: 'desktop' | 'mobile'
-  readonly initialTerm: string
-  readonly onSubmitted?: () => void
-}
-
-function SearchForm({ variant, initialTerm, onSubmitted }: SearchFormProps) {
-  const navigate = useNavigate()
-  const [term, setTerm] = useState(initialTerm)
-
-  const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
-    event.preventDefault()
-    const trimmed = term.trim()
-    if (trimmed === '') return
-    navigate(`/search?q=${encodeURIComponent(trimmed)}`)
-    onSubmitted?.()
-  }
-
-  return (
-    <form role="search" onSubmit={handleSubmit}>
-      <Icon name="search" size={18} className="search-icon" />
-      <input
-        type="search"
-        name="q"
-        value={term}
-        onChange={(event) => setTerm(event.target.value)}
-        placeholder={variant === 'desktop' ? SITE.searchPlaceholder : 'Zoeken naar producten...'}
-        aria-label="Zoeken"
-        autoComplete="off"
-        autoFocus={variant === 'mobile'}
-      />
-      {variant === 'desktop' && <button type="submit">Zoeken</button>}
-    </form>
-  )
-}
 
 export function Header() {
   const { totalQuantity, isOpen: isCartOpen, openCart } = useCart()
@@ -96,7 +61,7 @@ export function Header() {
             </div>
 
             <div className="site-header__search">
-              <SearchForm key={urlTerm} variant="desktop" initialTerm={urlTerm} />
+              <LiveSearch key={urlTerm} variant="desktop" initialTerm={urlTerm} />
             </div>
 
             <div className="site-header__actions">
@@ -154,23 +119,24 @@ export function Header() {
             </ul>
           </div>
         </nav>
-      </header>
 
-      <div
-        id="mobileSearchOverlay"
-        className={isSearchOpen ? 'mobile-search-overlay is-open' : 'mobile-search-overlay'}
-        inert={!isSearchOpen}
-        onKeyDown={(event) => {
-          if (event.key !== 'Escape') return
-          setIsSearchOpen(false)
-          // Het paneel wordt inert; zonder dit valt de focus terug op <body>.
-          searchToggleRef.current?.focus()
-        }}
-      >
-        {isSearchOpen && (
-          <SearchForm key={urlTerm} variant="mobile" initialTerm={urlTerm} onSubmitted={() => setIsSearchOpen(false)} />
-        )}
-      </div>
+        {/* In de sticky header, zodat het paneel altijd direct onder de header staat. */}
+        <div
+          id="mobileSearchOverlay"
+          className={isSearchOpen ? 'mobile-search-overlay is-open' : 'mobile-search-overlay'}
+          inert={!isSearchOpen}
+          onKeyDown={(event) => {
+            if (event.key !== 'Escape') return
+            setIsSearchOpen(false)
+            // Het paneel wordt inert; zonder dit valt de focus terug op <body>.
+            searchToggleRef.current?.focus()
+          }}
+        >
+          {isSearchOpen && (
+            <LiveSearch key={urlTerm} variant="mobile" initialTerm={urlTerm} onNavigate={() => setIsSearchOpen(false)} />
+          )}
+        </div>
+      </header>
 
       <MobileNav isOpen={isNavOpen} onClose={() => setIsNavOpen(false)} />
     </>
