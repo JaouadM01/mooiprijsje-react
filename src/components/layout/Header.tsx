@@ -18,6 +18,7 @@ export function Header() {
   const [isNavOpen, setIsNavOpen] = useState(false)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const searchToggleRef = useRef<HTMLButtonElement>(null)
+  const searchOverlayRef = useRef<HTMLDivElement>(null)
 
   const urlTerm = pathname === '/search' ? (searchParams.get('q') ?? '') : ''
 
@@ -32,6 +33,18 @@ export function Header() {
     setIsNavOpen(false)
     setIsSearchOpen(false)
   }, [pathname])
+
+  // Tikken buiten het mobiele zoekpaneel sluit het (de zoekknop zelf wisselt het al om).
+  useEffect(() => {
+    if (!isSearchOpen) return
+    const handlePointerDown = (event: PointerEvent): void => {
+      const target = event.target as Node
+      if (searchOverlayRef.current?.contains(target) || searchToggleRef.current?.contains(target)) return
+      setIsSearchOpen(false)
+    }
+    document.addEventListener('pointerdown', handlePointerDown)
+    return () => document.removeEventListener('pointerdown', handlePointerDown)
+  }, [isSearchOpen])
 
   return (
     <>
@@ -123,6 +136,9 @@ export function Header() {
         {/* In de sticky header, zodat het paneel altijd direct onder de header staat. */}
         <div
           id="mobileSearchOverlay"
+          ref={searchOverlayRef}
+          role="region"
+          aria-label="Zoeken"
           className={isSearchOpen ? 'mobile-search-overlay is-open' : 'mobile-search-overlay'}
           inert={!isSearchOpen}
           onKeyDown={(event) => {

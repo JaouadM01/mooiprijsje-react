@@ -60,7 +60,7 @@
 
 .product-card__badge--sale {
   background: var(--color-sale);
-  color: var(--color-white);
+  color: var(--color-on-accent);
 }
 
 .product-card__badge--sold-out {
@@ -107,7 +107,7 @@
 }
 
 .product-card__price--sale {
-  color: var(--color-sale);
+  color: var(--color-accent-text);
 }
 
 .product-card__price-compare {
@@ -254,7 +254,7 @@
 }
 
 .product__price--sale {
-  color: var(--color-sale);
+  color: var(--color-accent-text);
 }
 
 .product__price--compare {

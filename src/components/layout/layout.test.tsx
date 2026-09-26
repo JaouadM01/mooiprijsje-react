@@ -131,6 +131,17 @@ describe('mobile navigation', () => {
     expect(toggle).toHaveAttribute('aria-expanded', 'false')
   })
 
+  it('closes the mobile search when tapping outside it', async () => {
+    const user = userEvent.setup()
+    renderLayout()
+    const toggle = screen.getByRole('button', { name: 'Zoeken openen' })
+
+    await user.click(toggle)
+    expect(toggle).toHaveAttribute('aria-expanded', 'true')
+    await user.click(screen.getByTestId('location'))
+    expect(toggle).toHaveAttribute('aria-expanded', 'false')
+  })
+
   it('closes after choosing a link', async () => {
     const user = userEvent.setup()
     renderLayout()

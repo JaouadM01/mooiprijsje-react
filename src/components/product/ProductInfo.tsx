@@ -59,6 +59,7 @@ export function ProductInfo({ product }: { readonly product: Product }) {
   const variant = findVariant(product, selection)
   const hasVariants = product.variants.length > 1
   const onSale = variant !== null && isOnSale(variant.price, variant.compareAtPrice)
+  const badgePercent = variant === null ? null : badgeSavingsPercent(variant.price, variant.compareAtPrice)
   const canBuy = variant !== null && variant.available
 
   const submit = async (action: (variantId: string, quantity: number) => Promise<boolean>): Promise<void> => {
@@ -86,10 +87,8 @@ export function ProductInfo({ product }: { readonly product: Product }) {
                   <span className="sr-only">Was </span>
                   <s>{formatMoney(variant.compareAtPrice)}</s>
                 </span>
-                {badgeSavingsPercent(variant.price, variant.compareAtPrice) !== null && (
-                  <span className="product__badge product__badge--sale">
-                    Bespaar {badgeSavingsPercent(variant.price, variant.compareAtPrice)}%
-                  </span>
+                {badgePercent !== null && (
+                  <span className="product__badge product__badge--sale">Bespaar {badgePercent}%</span>
                 )}
               </>
             )}

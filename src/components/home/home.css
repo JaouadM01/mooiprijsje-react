@@ -752,7 +752,7 @@
   height: 72px;
   border-radius: var(--radius-full);
   background: var(--color-sale);
-  color: var(--color-white);
+  color: var(--color-on-accent);
   margin-bottom: 20px;
   box-shadow: 0 4px 16px rgba(255, 107, 43, 0.35);
 }
